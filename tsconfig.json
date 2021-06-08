@@ -1,0 +1,14 @@
+{
+  "extends": "@tsconfig/node12/tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "lib": ["es2019", "es2020.promise", "es2020.bigint", "es2020.string"],
+    "declaration": true,
+    "outDir": "./dist",
+    "strict": true,
+  },
+  "include": ["blink1-async.ts", "examples/example1.ts"],
+  "exclude": [
+      "**/dist/**", 
+      "**/test/**"]
+}

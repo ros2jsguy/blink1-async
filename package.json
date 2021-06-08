@@ -1,0 +1,21 @@
+{
+  "name": "node-blink1-async",
+  "version": "0.1.0",
+  "description": "Asynchronous TypeScript api for the node-blink1 package",
+  "main": "dist/blink1-async.js",
+  "types": "dist/blink1-async.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["Blink1", "Led"],
+  "author": "ros2jsguy <ros2jsguy@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@tsconfig/node12": "^1.0.7",
+    "@types/node": "^15.12.1",
+    "typescript": "^4.3.2"
+  },
+  "dependencies": {
+    "node-blink1": "^0.5.1"
+  }
+}
