@@ -48,9 +48,9 @@ export class Blink1Async {
    * Create a high-level refernece to a Blink1 HID device.
    * @param [serialNumber] The serial number of the device to reference (see devices()). 
    *                       When undefined choose the first Blink1 device found.
-   * @param [enableGamma=true] Enablement for gamma color correction
+   * @param [enableDegamma=true] Enablement for degamma color correction (crappy name)
    */
-  constructor(serialNumber?: string, enableGamma=true) {
+  constructor(serialNumber?: string, enableDegamma=true) {
     this._blink1 = new Blink1(serialNumber);
   }
 
@@ -81,26 +81,28 @@ export class Blink1Async {
     });
   }
 
+  // TODO - commented out getSerialNumber() and getId() as they are causing
+  // blink(1) device to crash. Investigate asap.
   /**
    * Access the Blink1 serial number
    * @returns a Promise that returns the Blink1 device serialNumber
    */
-  getSerialNumber(): Promise<string> {
-    return new Promise((resolve) => {
-      this._blink1.getId(resolve);
-    });
-  }
+  // getSerialNumber(): Promise<string> {
+  //   return new Promise((resolve) => {
+  //     this._blink1.getId(resolve);
+  //   });
+  // }
 
   /**
    * Access the Blink1 serial number
    * @returns a Promise that returns the Blink1 device serialNumber
    * @deprecated use getSerialNumber()
    */
-  getId(): Promise<string> {
-    return new Promise((resolve) => {
-      this._blink1.getId(resolve);
-    });
-  }
+  // getId(): Promise<string> {
+  //   return new Promise((resolve) => {
+  //     this._blink1.getId(resolve);
+  //   });
+  // }
 
   /**
    * Close the underlying HID device.
@@ -112,16 +114,16 @@ export class Blink1Async {
   }
 
   /**
-   * Transition the target LED to a new RGB color.
+   * Transition one or both LEDs to a new RGB color.
    * @param fadeMillis The milliseconds for the transition.
    * @param [red=0] The red color value [0-255].
    * @param [green=0] The green color value [0-255].
    * @param [blue=0] The blue color value [0-255].
-   * @param [targetLed=Blink1_LEDN.ALL] Target both leds on the Blink1. 
+   * @param [led=Blink1_LEDN.ALL] Led(s) to update. 
    */
-  fadeToRGB(fadeMillis: number, red=0, green=0, blue=0, targetLed=Blink1_LEDN.ALL) {
+  fadeToRGB(fadeMillis: number, red=0, green=0, blue=0, led=Blink1_LEDN.ALL) {
     return new Promise((resolve) => {
-      this._blink1.fadeToRGB(fadeMillis, red, green, blue, targetLed, resolve);
+      this._blink1.fadeToRGB(fadeMillis, red, green, blue, led, resolve);
     });
   }
 
@@ -273,11 +275,11 @@ export class Blink1Async {
 
   /**
    * Set the led to which future writePattern() calls will apply.
-   * @param ledTarget The led
+   * @param led The led to make default
    */
-  setLedN(ledTarget=Blink1_LEDN.ALL): Promise<void> {
+  setLedN(led=Blink1_LEDN.ALL): Promise<void> {
     return new Promise((resolve) => {
-      this._blink1.setLedN(resolve);
+      this._blink1.setLedN(led, resolve);
     });
   }
 
@@ -288,13 +290,13 @@ export class Blink1Async {
    */
   enableServerDown(triggerMillis=10000) {
     return new Promise((resolve) => {
-      this._blink1.enableServerDown(resolve);
+      this._blink1.enableServerDown(triggerMillis, resolve);
     });
   }
 
   disableServerDown() {
     return new Promise((resolve) => {
-      this._blink1.enableServerDown(resolve);
+      this._blink1.disableServerDown(resolve);
     });
   }
 }
