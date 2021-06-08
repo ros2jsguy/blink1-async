@@ -3,6 +3,11 @@ Controlling a Blink1 Led is simple using this package. Much of the API is asynch
 
 If you perfer a JS callback style API consider [node-blink1](https://www.npmjs.com/package/node-blink1). 
 
+# Prerequisites
+* Node (v12+)
+* blink(1) led device
+
+Ensure your blink(1) is fully functional using the [blink(1) utilities](https://blink1.thingm.com/downloads/). 
 
 # Install
 ```
