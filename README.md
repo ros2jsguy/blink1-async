@@ -40,12 +40,12 @@ example();
 I develop mostly in TypeScript and prefer using modern JS features when I have the option. 
 Working directly with the node-blink1 package which has been around for awhile, felt too
 retro for my liking, e.g., no jsdoc, callback-based api... 
-I mean no disrespect for node-blink1 author(s) who's priority 
+I mean no disrespect to the node-blink1 author(s) who's priority 
 for backward compatibility supercedes breaking the package just to use a new
-wizbang language feature. While developing a robot mostly in TypeScript that
-uses a Raspi4 for control I wanted to integrate an old Blink1 led from my kit
+wizbang language feature. While developing a robot using TypeScript 
+on a Raspi4 I wanted to integrate an old Blink1 led from my kit
 into the design. That led me to creating this package that makes it easier to 
-to control a Blink1 LED from TypeScript.
+to asynchronously control a Blink1 LED from TypeScript.
 
 # Credits
-This package uses the [node-blink1](https://www.npmjs.com/package/node-blink1) package to do the control of Blink1 devices
+This package uses the [node-blink1](https://www.npmjs.com/package/node-blink1) package to perform the low level control of Blink1 devices
