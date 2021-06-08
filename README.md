@@ -1,6 +1,8 @@
 # blink1-async - A asynchronous TypeScript api for Blink1 LED device
 Controlling a Blink1 Led is simple using this package. Much of the API is asynchronous (i.e., returns Promise that you can await on) and is fully documented using TSDoc. 
 
+If you perfer a JS callback style API consider [node-blink1](https://www.npmjs.com/package/node-blink1). 
+
 
 # Install
 ```
