@@ -4,7 +4,7 @@ Controlling a Blink1 Led is simple using this package. Much of the API is asynch
 
 # Install
 ```
-npm install https://github.com/ros2jsguy/blink-async
+npm install https://github.com/ros2jsguy/node-blink-async
 ```
 
 # Example
