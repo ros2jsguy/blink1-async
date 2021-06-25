@@ -76,7 +76,7 @@ export class Blink1Async {
    * @returns The version string.
    */
   version(): Promise<number> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this._blink1.version(resolve);
     });
   }
@@ -108,7 +108,7 @@ export class Blink1Async {
    * Close the underlying HID device.
    */
    close(): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this._blink1.close(resolve);
     });
   }
@@ -122,7 +122,7 @@ export class Blink1Async {
    * @param [led=Blink1_LEDN.ALL] Led(s) to update. 
    */
   fadeToRGB(fadeMillis: number, red=0, green=0, blue=0, led=Blink1_LEDN.ALL) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this._blink1.fadeToRGB(fadeMillis, red, green, blue, led, resolve);
     });
   }
@@ -133,7 +133,7 @@ export class Blink1Async {
    * @returns The current RGB values.
    */
   rgb(led: Blink1_LEDN): Promise<RGBData> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this._blink1.rgb(led, resolve);
     });
   }
@@ -146,7 +146,7 @@ export class Blink1Async {
    * @param [blue=0] The blue color value [0-255].
    */
   setRGB(red=0, green=0, blue=0): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this._blink1.setRGB(red, green, blue, resolve);
     });
   }
@@ -155,7 +155,7 @@ export class Blink1Async {
    * Immediately disable output. 
    */
   off(): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this._blink1.off(resolve);
     });
   }
@@ -165,7 +165,7 @@ export class Blink1Async {
    * @param startPosition The index [0-31] into the sequence of color patterns.
    */
   play(startPosition=0): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this._blink1.play(startPosition, resolve);
     });
   }
@@ -179,7 +179,7 @@ export class Blink1Async {
    * @param [count=1] The number of times to loop, 0 = loop infinitely
    */
   playLoop(startPosition=0, endPosition=0, count=0): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this._blink1.playLoop(startPosition, endPosition, count, resolve);
     });
   }
@@ -188,7 +188,7 @@ export class Blink1Async {
    * Immediately stop presenting color patterns from RAM.
    */
   stop(): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this._blink1.pause(resolve);
     });
   }
@@ -202,41 +202,11 @@ export class Blink1Async {
   }
 
   /**
-   * Play an alternating pattern of the provided color in an on/off sequence for
-   * the number cycles or infinitely.
-   * 
-   * Note this method returns as soon as the play command is sent 
-   * to the Blink1 device, not when the blinking command has completed.
-   * 
-   * @param [red=0] The red color value [0-255].
-   * @param [green=0] The green color value [0-255].
-   * @param [blue=0] The blue color value [0-255].
-   * @param [duration=1000] Blink for duration milliseconds, 0 = blink infinitely
-   */
-  async blink(red=0, green=0, blue=0, rate=BlinkRate.MED, duration=1000): Promise<void> {
-    let cnt = 0;
-
-    // COLOR ON
-    await this.writePatternLine(10, red, green, blue, cnt++);
-    await this.writePatternLine(rate, red, green, blue, cnt++);
-
-    // COLOR OFF
-    await this.writePatternLine(10, 0, 0, 0, cnt++);
-    await this.writePatternLine(rate, 0, 0, 0, cnt++);
-
-    await this.playLoop(0, cnt-1, 0); // play continuously
-
-    return new Promise( (resolve) => {
-      setTimeout(resolve, duration === 0 ? Number.MAX_SAFE_INTEGER : duration);
-    });
-  }
-
-  /**
    * Return the color pattern data at position in RAM.
    * @param [position=0] The index [0-31] into the sequence of color patterns
    */
   readPatternLine(position=0): Promise<string> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this._blink1.readPatternLine(position, resolve);
     });
   }
@@ -250,7 +220,7 @@ export class Blink1Async {
    * @param [position=0] The position [0-31] in the color sequence to insert this pattern.
    */
   writePatternLine(fadeMillis: number, red=0, green=0, blue=0, position=0): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this._blink1.writePatternLine(fadeMillis, red, green, blue, position, resolve);
     });
   }
@@ -259,7 +229,7 @@ export class Blink1Async {
    * Save all patterns in to Blink(1) non-volatile memory.
    */
   savePattern(): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this._blink1.savePattern(resolve);
     });
   }
@@ -268,17 +238,19 @@ export class Blink1Async {
    * Clear all pattern data from Blink(1) non-volatile memory.
    */
   async clearPattern(): Promise<void> {
+    return new Promise(async resolve => {
       for (let i=0; i< 32; i++) {
         await this._blink1.writePatternLine(0, 0, 0, 0, i);
       }
-    }
+    });
+  }
 
   /**
    * Set the led to which future writePattern() calls will apply.
    * @param led The led to make default
    */
   setLedN(led=Blink1_LEDN.ALL): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this._blink1.setLedN(led, resolve);
     });
   }
@@ -295,8 +267,48 @@ export class Blink1Async {
   }
 
   disableServerDown() {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this._blink1.disableServerDown(resolve);
     });
   }
+
+  /**
+   * Play an alternating pattern of the provided color in an on/off sequence for
+   * the number cycles or infinitely.
+   * 
+   * Note this method returns as soon as the play command is sent 
+   * to the Blink1 device, not when the blinking command has completed.
+   * 
+   * @param [red=0] The red color value [0-255].
+   * @param [green=0] The green color value [0-255].
+   * @param [blue=0] The blue color value [0-255].
+   * @param [duration=1000] Blink for duration milliseconds, 0 = blink infinitely
+   */
+   async blink(red=0, green=0, blue=0, rate=BlinkRate.MED, duration=1000): Promise<void> {
+    let cnt = 0;
+
+    // COLOR ON
+    // await this.writePatternLine(10, red, green, blue, cnt++);
+    await this.writePatternLine(rate, red, green, blue, cnt++);
+
+    // COLOR OFF
+    // await this.writePatternLine(10, 0, 0, 0, cnt++);
+    await this.writePatternLine(rate, 0, 0, 0, cnt++);
+
+    await this.playLoop(0, cnt-1, 0); // play continuously
+
+    return new Promise(resolve => {
+      setTimeout(resolve, duration === 0 ? Number.MAX_SAFE_INTEGER : duration);
+    });
+  }
+
+  async writePattern(patterns: Array<PatternLineData>, startPos=0): Promise<void> {
+    let pos = startPos;
+    return new Promise(resolve => {
+      patterns.forEach(async pattern => {
+        await this.writePatternLine(pattern.fadeMillis, pattern.r, pattern.g, pattern.b, pos++);
+      });
+    })
+  }
+
 }
