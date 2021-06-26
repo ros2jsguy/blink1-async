@@ -10,7 +10,8 @@
   },
   "keywords": [
     "Blink1",
-    "Led"
+    "blink(1)",
+    "led"
   ],
   "author": "ros2jsguy <66370745+ros2jsguy@users.noreply.github.com>",
   "repository": {
