@@ -1,8 +1,8 @@
 # node-blink1-async
 
-Programmatically controlling [blink(1) USB LED devices](https://blink1.thingm.com/) is simple using **node-blink-async**. Much of the API is asynchronous (i.e., returns Promise that you can await on) and fully [documented](https://ros2jsguy.github.io/node-blink1-async/). This module has been tested on Mac, Windows 10, and Ubuntu Linux on a Raspberry Pi 4. 
+Programmatically controlling [blink(1) USB LED devices](https://blink1.thingm.com/) is simple using **node-blink1-async**. Much of the API is asynchronous (i.e., returns Promise that you can await on) and fully [documented](https://ros2jsguy.github.io/node-blink1-async/). This module has been tested on Mac, Windows 10, and Ubuntu Linux on a Raspberry Pi 4. 
 
-![blink(1) USB led on raspberry pi 4](blink1-raspi.jpg "blink(1) USB led on raspberry pi 4")
+![blink(1) USB led on raspberry pi 4](docs/blink1-raspi.jpg "blink(1) USB led on raspberry pi 4")
 
 
 If you perfer a JS callback style API consider [node-blink1](https://www.npmjs.com/package/node-blink1). 
