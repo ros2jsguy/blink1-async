@@ -30,7 +30,7 @@ You may find the 51-blink1.rules file useful in your device configuration proces
 
 # TypeScript Example
 ```
-import {Blink1Async, Blink1_LEDN, BlinkRate} from '../blink1-async';
+import {Blink1Async, Blink1_LEDN, BlinkRate} from '@ros2jsguy/node-blink1-async';
 
 async function example() {
   // list all blink(1) devices
