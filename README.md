@@ -1,11 +1,16 @@
-# blink1-async - A asynchronous TypeScript api for Blink1 LED device
-Controlling a Blink1 Led is simple using this package. Much of the API is asynchronous (i.e., returns Promise that you can await on) and is fully documented using TSDoc. 
+# node-blink1-async
+
+Programmatically controlling [blink(1) USB LED devices](https://blink1.thingm.com/) is simple using **node-blink-async**. Much of the API is asynchronous (i.e., returns Promise that you can await on) and fully [documented](https://ros2jsguy.github.io/node-blink1-async/). This module has been tested on Mac, Windows 10, and Ubuntu Linux on a Raspberry Pi 4. 
+
+![blink(1) USB led on raspberry pi 4](blink1-raspi.jpg "blink(1) USB led on raspberry pi 4")
+
 
 If you perfer a JS callback style API consider [node-blink1](https://www.npmjs.com/package/node-blink1). 
 
+
 # Prerequisites
 * Node (v12+)
-* blink(1) led device
+* blink(1) USB led device
 
 Ensure your blink(1) is fully functional using the [blink(1) utilities](https://blink1.thingm.com/downloads/). 
 
@@ -14,13 +19,24 @@ Ensure your blink(1) is fully functional using the [blink(1) utilities](https://
 npm install https://github.com/ros2jsguy/node-blink-async
 ```
 
-# Example
+## Linux Users
+Your device may need libusb installed:
+```
+sudo apt install libusb-1.0-0
+```
+
+See node-hid's [instructions for compiling from source](https://github.com/node-hid/node-hid#compiling-from-source)
+You may find the 51-blink1.rules file useful in your device configuration process. 
+
+# TypeScript Example
 ```
 import {Blink1Async, Blink1_LEDN, BlinkRate} from '../blink1-async';
 
 async function example() {
+  // list all blink(1) devices
   console.log('devices; ', Blink1Async.devices());
 
+  // output the version info of the default blink(1) device
   let blink1: Blink1Async = new Blink1Async();
   console.log("version: " , await blink1.version() );
 
@@ -39,15 +55,20 @@ async function example() {
   console.log('Show solid yellow for 5 seconds');
   await blink1.blink(255, 255, 0, 10000, 5000);
 
+  // turn off the blink(1) output
   await blink1.off();
 
+  // access the display pattern at line-1
   console.log('Color pattern (line-1):', await blink1.readPatternLine(1));
 
+  // clear the memory of all display patterns.
   console.log('Clearing pattern');
   await blink1.clearPattern();
+
+  // confirm that display patterns are cleared
   console.log('Color pattern (line-1):', await blink1.readPatternLine(1));
 
-  await blink1.clearPattern();
+  // close and release the blink(1) device
   await blink1.close();
 
   console.log('completed');

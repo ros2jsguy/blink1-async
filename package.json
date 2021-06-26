@@ -5,14 +5,23 @@
   "main": "dist/blink1-async.js",
   "types": "dist/blink1-async.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npx tsc",
+    "build-docs": "npx typedoc --out docs blink1-async.ts"
   },
-  "keywords": ["Blink1", "Led"],
-  "author": "ros2jsguy <ros2jsguy@gmail.com>",
+  "keywords": [
+    "Blink1",
+    "Led"
+  ],
+  "author": "ros2jsguy <66370745+ros2jsguy@users.noreply.github.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ros2jsguy/node-blink1-async.git"
+   },
   "license": "MIT",
   "devDependencies": {
     "@tsconfig/node12": "^1.0.7",
     "@types/node": "^15.12.1",
+    "typedoc": "^0.21.1",
     "typescript": "^4.3.2"
   },
   "dependencies": {
