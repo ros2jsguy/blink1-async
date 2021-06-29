@@ -42,9 +42,7 @@ async function example() {
 
   console.log('set color: red', await blink1.setRGB(255));
   console.log('read rgb: ', await blink1.rgb(Blink1_LEDN.LEDA));
-  await new Promise( (resolve) => {
-    setTimeout(resolve, 2000);    
-  });
+  await Blink1.delay(2000);
 
   console.log('Blink green at VERY_FAST rate (100 ms) for 5 seconds');
   await blink1.blink(0, 255, 0, BlinkRate.VERY_FAST, 5000);
