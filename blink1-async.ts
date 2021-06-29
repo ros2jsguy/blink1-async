@@ -1,6 +1,6 @@
 
 
-const Blink1 = require('node-blink1');
+const _blink1Lib = require('node-blink1');
 
 export enum Blink1_LEDN {
   ALL = 0,
@@ -31,27 +31,27 @@ export enum BlinkRate {
 /**
  * An asynchronouse api for controlling blink(1) USB LED devices.
  */
-export class Blink1Async {
+export class Blink1 {
 
-  // The Blink1 instance from node-blink1 package that does all of the work.
+  // The blink(1) instance from node-blink1 package that does all of the work.
   private _blink1: any;
 
   /**
-   * Find all connected Blink1 devices.
-   * @returns Array of found Blink1 serial numbers.
+   * Find all connected blink(1) devices.
+   * @returns Array of found blink(1) serial numbers.
    */
   static devices(): Array<string> {
-    return Blink1.devices();
+    return _blink1Lib.devices();
   }
 
   /**
-   * Create a high-level reference to a Blink1 HID device.
+   * Create a high-level reference to a blink(1) HID device.
    * @param [serialNumber] The serial number of the device to reference (see devices()). 
-   *                       When undefined choose the first Blink1 device found.
+   *                       When undefined choose the first blink(1) device found.
    * @param [enableDegamma=true] Enablement for degamma color correction (crappy name)
    */
   constructor(serialNumber?: string, enableDegamma=true) {
-    this._blink1 = new Blink1(serialNumber);
+    this._blink1 = new _blink1Lib(serialNumber);
   }
 
   /**
@@ -72,7 +72,7 @@ export class Blink1Async {
   }
   
   /**
-   * Return the version number of the Blink1 HID device.
+   * Return the version number of the blink(1) HID device.
    * @returns Promise<number> with version string to await for completion
    */
   version(): Promise<number> {
@@ -84,8 +84,8 @@ export class Blink1Async {
   // TODO - commented out getSerialNumber() and getId() as they are causing
   // blink(1) device to crash. Investigate asap.
   /**
-   * Access the Blink1 serial number
-   * @returns a Promise that returns the Blink1 device serialNumber
+   * Access the blink(1) serial number
+   * @returns a Promise that returns the blink(1) device serialNumber
    */
   // getSerialNumber(): Promise<string> {
   //   return new Promise((resolve) => {
@@ -94,8 +94,8 @@ export class Blink1Async {
   // }
 
   /**
-   * Access the Blink1 serial number
-   * @returns a Promise that returns the Blink1 device serialNumber
+   * Access the blink(1) serial number
+   * @returns a Promise that returns the blink(1) device serialNumber
    * @deprecated use getSerialNumber()
    */
   // getId(): Promise<string> {

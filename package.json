@@ -1,6 +1,6 @@
 {
   "name": "@ros2jsguy/node-blink1-async",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Asynchronous TypeScript api for the node-blink1 package",
   "main": "dist/blink1-async.js",
   "types": "dist/blink1-async.d.ts",

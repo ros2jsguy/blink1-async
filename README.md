@@ -30,14 +30,14 @@ You may find the 51-blink1.rules file useful in your device configuration proces
 
 # TypeScript Example
 ```
-import {Blink1Async, Blink1_LEDN, BlinkRate} from '@ros2jsguy/node-blink1-async';
+import {Blink1, Blink1_LEDN, BlinkRate} from '@ros2jsguy/node-blink1-async';
 
 async function example() {
   // list all blink(1) devices
-  console.log('devices; ', Blink1Async.devices());
+  console.log('devices; ', Blink1.devices());
 
   // output the version info of the default blink(1) device
-  let blink1: Blink1Async = new Blink1Async();
+  let blink1: Blink1 = new Blink1();
   console.log("version: " , await blink1.version() );
 
   console.log('set color: red', await blink1.setRGB(255));

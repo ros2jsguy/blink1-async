@@ -1,9 +1,9 @@
-import {Blink1Async, Blink1_LEDN, BlinkRate} from '../blink1-async';
+import {Blink1, Blink1_LEDN, BlinkRate} from '../blink1-async';
 
 async function example() {
-  console.log('devices; ', Blink1Async.devices());
+  console.log('devices; ', Blink1.devices());
 
-  let blink1: Blink1Async = new Blink1Async();
+  let blink1: Blink1 = new Blink1();
   console.log("version: " , await blink1.version() );
 
   console.log('set color: red', await blink1.setRGB(255));

@@ -88,14 +88,14 @@
 				<a href="#typescript-example" id="typescript-example" style="color: inherit; text-decoration: none;">
 					<h1>TypeScript Example</h1>
 				</a>
-				<pre><code><span style="color: #AF00DB">import</span><span style="color: #000000"> {</span><span style="color: #001080">Blink1Async</span><span style="color: #000000">, </span><span style="color: #001080">Blink1_LEDN</span><span style="color: #000000">, </span><span style="color: #001080">BlinkRate</span><span style="color: #000000">} </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@ros2jsguy/node-blink1-async&#039;</span><span style="color: #000000">;</span>
+				<pre><code><span style="color: #AF00DB">import</span><span style="color: #000000"> {</span><span style="color: #001080">Blink1</span><span style="color: #000000">, </span><span style="color: #001080">Blink1_LEDN</span><span style="color: #000000">, </span><span style="color: #001080">BlinkRate</span><span style="color: #000000">} </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@ros2jsguy/node-blink1-async&#039;</span><span style="color: #000000">;</span>
 
 <span style="color: #0000FF">async</span><span style="color: #000000"> </span><span style="color: #0000FF">function</span><span style="color: #000000"> </span><span style="color: #795E26">example</span><span style="color: #000000">() {</span>
 <span style="color: #000000">  </span><span style="color: #008000">// list all blink(1) devices</span>
-<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;devices; &#039;</span><span style="color: #000000">, </span><span style="color: #001080">Blink1Async</span><span style="color: #000000">.</span><span style="color: #795E26">devices</span><span style="color: #000000">());</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;devices; &#039;</span><span style="color: #000000">, </span><span style="color: #001080">Blink1</span><span style="color: #000000">.</span><span style="color: #795E26">devices</span><span style="color: #000000">());</span>
 
 <span style="color: #000000">  </span><span style="color: #008000">// output the version info of the default blink(1) device</span>
-<span style="color: #000000">  </span><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">blink1</span><span style="color: #000000">: </span><span style="color: #267F99">Blink1Async</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Blink1Async</span><span style="color: #000000">();</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">blink1</span><span style="color: #000000">: </span><span style="color: #267F99">Blink1</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Blink1</span><span style="color: #000000">();</span>
 <span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;version: &quot;</span><span style="color: #000000"> , </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">blink1</span><span style="color: #000000">.</span><span style="color: #795E26">version</span><span style="color: #000000">() );</span>
 
 <span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;set color: red&#039;</span><span style="color: #000000">, </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">blink1</span><span style="color: #000000">.</span><span style="color: #795E26">setRGB</span><span style="color: #000000">(</span><span style="color: #098658">255</span><span style="color: #000000">));</span>
@@ -167,7 +167,7 @@
 						<a href="enums/blinkrate.html" class="tsd-kind-icon">Blink<wbr>Rate</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/blink1async.html" class="tsd-kind-icon">Blink1<wbr>Async</a>
+						<a href="classes/blink1.html" class="tsd-kind-icon">Blink1</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="modules.html#patternlinedata" class="tsd-kind-icon">Pattern<wbr>Line<wbr>Data</a>
