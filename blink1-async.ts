@@ -28,6 +28,8 @@ export enum BlinkRate {
   VERY_FAST = 100
 } 
 
+const MAX_BLINK_DURATION = 0x1 << 30;
+console.log('MAX:', MAX_BLINK_DURATION);
 /**
  * An asynchronouse api for controlling blink(1) USB LED devices.
  */
@@ -43,6 +45,19 @@ export class Blink1 {
   static devices(): Array<string> {
     return _blink1Lib.devices();
   }
+
+  /**
+   * Utility a sender can await on from an async function or method 
+   * to create a delay-like experience in execution.
+   * @param [millis=1000] - delay period in milliseconds, if millis <= 0 then 2^31
+   * @returns A Promise that the sender can await on to simulate a delay
+   */
+  static delay(millis=1000): Promise<void> {
+    let duration = millis <= 0 || millis > MAX_BLINK_DURATION ? MAX_BLINK_DURATION : millis;
+    return new Promise(resolve => {
+      setTimeout(resolve, duration);
+    });
+  } 
 
   /**
    * Create a high-level reference to a blink(1) HID device.
@@ -125,7 +140,9 @@ export class Blink1 {
    */
   fadeToRGB(fadeMillis: number, red=0, green=0, blue=0, led=Blink1_LEDN.ALL) {
     return new Promise(resolve => {
-      this._blink1.fadeToRGB(fadeMillis, red, green, blue, led, resolve);
+      fadeMillis > 0 ?
+        this._blink1.fadeToRGB(fadeMillis, red, green, blue, led, resolve) :
+        this._blink1.setRGB(red, green, blue);
     });
   }
 
@@ -302,22 +319,19 @@ export class Blink1 {
    * @param [duration=1000] Blink for duration milliseconds, 0 = blink infinitely
    * @returns Promise<void> to await for completion
    */
-   async blink(red=0, green=0, blue=0, rate=BlinkRate.MED, duration=1000): Promise<void> {
+   async blink(red=0, green=0, blue=0, rate=BlinkRate.MED, duration=0): Promise<void> {
     let cnt = 0;
 
-    // COLOR ON
-    // await this.writePatternLine(10, red, green, blue, cnt++);
+    // setup COLOR ON pattern
     await this.writePatternLine(rate, red, green, blue, cnt++);
 
-    // COLOR OFF
-    // await this.writePatternLine(10, 0, 0, 0, cnt++);
+    // setup COLOR OFF pattern
     await this.writePatternLine(rate, 0, 0, 0, cnt++);
-
+    
+    // start blink loop
     await this.playLoop(0, cnt-1, 0); // play continuously
 
-    return new Promise(resolve => {
-      setTimeout(resolve, duration === 0 ? Number.MAX_SAFE_INTEGER : duration);
-    });
+    await Blink1.delay(duration);
   }
 
   /**
