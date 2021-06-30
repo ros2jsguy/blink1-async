@@ -29,14 +29,16 @@ export enum BlinkRate {
 } 
 
 const MAX_BLINK_DURATION = 0x1 << 30;
-console.log('MAX:', MAX_BLINK_DURATION);
+
 /**
- * An asynchronouse api for controlling blink(1) USB LED devices.
+ * An asynchronous api for controlling blink(1) USB LED devices.
  */
 export class Blink1 {
 
   // The blink(1) instance from node-blink1 package that does all of the work.
   private _blink1: any;
+  private _isClosed: boolean;
+  private _timeout: number | undefined;
 
   /**
    * Find all connected blink(1) devices.
@@ -47,8 +49,8 @@ export class Blink1 {
   }
 
   /**
-   * Utility a sender can await on from an async function or method 
-   * to create a delay-like experience in execution.
+   * Utility method that a sender can await on from an async function or method 
+   * to create a delay-like execution experience.
    * @param [millis=1000] - delay period in milliseconds, if millis <= 0 then 2^31
    * @returns A Promise that the sender can await on to simulate a delay
    */
@@ -67,6 +69,14 @@ export class Blink1 {
    */
   constructor(serialNumber?: string, enableDegamma=true) {
     this._blink1 = new _blink1Lib(serialNumber);
+    this._isClosed = false;
+
+    process.on('SIGINT', async () => {
+      if (!this.isClosed()) {
+        await this.close();
+        process.exit(0);
+      }
+    })
   }
 
   /**
@@ -98,21 +108,21 @@ export class Blink1 {
 
   // TODO - commented out getSerialNumber() and getId() as they are causing
   // blink(1) device to crash. Investigate asap.
-  /**
-   * Access the blink(1) serial number
-   * @returns a Promise that returns the blink(1) device serialNumber
-   */
+  // /**
+  //  * Access the blink(1) serial number
+  //  * @returns a Promise that returns the blink(1) device serialNumber
+  //  */
   // getSerialNumber(): Promise<string> {
   //   return new Promise((resolve) => {
   //     this._blink1.getId(resolve);
   //   });
   // }
 
-  /**
-   * Access the blink(1) serial number
-   * @returns a Promise that returns the blink(1) device serialNumber
-   * @deprecated use getSerialNumber()
-   */
+  // /**
+  //  * Access the blink(1) serial number
+  //  * @returns a Promise that returns the blink(1) device serialNumber
+  //  * @deprecated use getSerialNumber()
+  //  */
   // getId(): Promise<string> {
   //   return new Promise((resolve) => {
   //     this._blink1.getId(resolve);
@@ -123,10 +133,16 @@ export class Blink1 {
    * Close the underlying HID device.
    * @returns Promise<void> to await for completion
    */
-   close(): Promise<void> {
-    return new Promise(resolve => {
-      this._blink1.close(resolve);
-    });
+   async close(): Promise<void> {
+    if (this.isClosed()) return;
+    
+    this._isClosed = true;
+    await this.off(); 
+    await new Promise(resolve => this._blink1.close(resolve));
+  }
+
+  isClosed(): boolean {
+    return this._isClosed;
   }
 
   /**
@@ -138,12 +154,10 @@ export class Blink1 {
    * @param [led=Blink1_LEDN.ALL] Led(s) to update.
    * @returns Promise<void> to await for completion
    */
-  fadeToRGB(fadeMillis: number, red=0, green=0, blue=0, led=Blink1_LEDN.ALL) {
-    return new Promise(resolve => {
-      fadeMillis > 0 ?
-        this._blink1.fadeToRGB(fadeMillis, red, green, blue, led, resolve) :
-        this._blink1.setRGB(red, green, blue);
-    });
+  fadeToRGB(fadeMillis: number, red=0, green=0, blue=0, led=Blink1_LEDN.ALL): Promise<void> {
+    return fadeMillis > 0 ?
+      new Promise(resolve => this._blink1.fadeToRGB(fadeMillis, red, green, blue, led, resolve)) :
+      new Promise(resolve => this._blink1.setRGB(red, green, blue, resolve));
   }
 
   /**
@@ -152,9 +166,7 @@ export class Blink1 {
    * @returns A promise that resolves to the current RGB values.
    */
   rgb(led: Blink1_LEDN): Promise<RGBData> {
-    return new Promise(resolve => {
-      this._blink1.rgb(led, resolve);
-    });
+    return new Promise(resolve => this._blink1.rgb(led, resolve));
   }
 
   /**
@@ -175,10 +187,10 @@ export class Blink1 {
    * Immediately disable output. 
    * @returns Promise<void> to await for completion
    */
-  off(): Promise<void> {
-    return new Promise(resolve => {
-      this._blink1.off(resolve);
-    });
+  async off(): Promise<void> {
+    await this.stop();
+    await this.setRGB();
+    await new Promise((resolve) => this._blink1.off(resolve));
   }
 
   /**
@@ -212,24 +224,13 @@ export class Blink1 {
    * @returns Promise<void> to await for completion
    */
   stop(): Promise<void> {
-    return new Promise(resolve => {
-      this._blink1.pause(resolve);
-    });
-  }
-
-  /**
-   * Immediately stop presenting display patterns from RAM.
-   * @returns Promise<void> to await for completion
-   * @deprecated Use stop()
-   */
-  pause(): Promise<void> {
-    return this.stop();
+    return new Promise(resolve => this._blink1.pause(resolve));
   }
 
   /**
    * Return the color pattern data at position in RAM.
    * @param [position=0] The index [0-31] into the sequence of color patterns
-  * @returns Promise<string> returnin the pattern line read
+   * @returns Promise<string> returnin the pattern line read
    */
   readPatternLine(position=0): Promise<string> {
     return new Promise(resolve => {
@@ -247,9 +248,8 @@ export class Blink1 {
    * @returns Promise<void> to await for completion
    */
   writePatternLine(fadeMillis: number, red=0, green=0, blue=0, position=0): Promise<void> {
-    return new Promise(resolve => {
-      this._blink1.writePatternLine(fadeMillis, red, green, blue, position, resolve);
-    });
+    return new Promise(resolve => 
+      this._blink1.writePatternLine(fadeMillis, red, green, blue, position, resolve));
   }
 
   /**
@@ -257,16 +257,14 @@ export class Blink1 {
    * @returns Promise<void> to await for completion
    */
   savePattern(): Promise<void> {
-    return new Promise(resolve => {
-      this._blink1.savePattern(resolve);
-    });
+    return new Promise(resolve => this._blink1.savePattern(resolve));
   }
 
    /**
    * Clear all pattern data from Blink(1) non-volatile memory.
    * @returns Promise<void> to await for completion
    */
-  async clearPattern(): Promise<void> {
+  clearPattern(): Promise<void> {
     return new Promise(async resolve => {
       for (let i=0; i< 32; i++) {
         await this._blink1.writePatternLine(0, 0, 0, 0, i);
@@ -280,9 +278,7 @@ export class Blink1 {
    * @returns Promise<void> to await for completion
    */
   setLedN(led=Blink1_LEDN.ALL): Promise<void> {
-    return new Promise(resolve => {
-      this._blink1.setLedN(led, resolve);
-    });
+    return new Promise(resolve => this._blink1.setLedN(led, resolve));
   }
 
   /**
@@ -291,9 +287,8 @@ export class Blink1 {
    * @returns Promise<void> to await for completion
    */
   enableServerDown(triggerMillis=10000) {
-    return new Promise((resolve) => {
-      this._blink1.enableServerDown(triggerMillis, resolve);
-    });
+    return new Promise((resolve) =>
+      this._blink1.enableServerDown(triggerMillis, resolve));
   }
 
   /**
@@ -301,37 +296,29 @@ export class Blink1 {
    * @returns A promise to await on.
    */
   disableServerDown() {
-    return new Promise(resolve => {
-      this._blink1.disableServerDown(resolve);
-    });
+    return new Promise(resolve => this._blink1.disableServerDown(resolve));
   }
 
   /**
-   * Play an alternating pattern of the rgb color parameter in an on/off sequence for
-   * the number cycles or infinitely.
-   * 
-   * Note this method returns as soon as the play command is sent 
-   * to the blink(1) device, not when the blinking command has completed.
+   * Continuously play an alternating pattern of the rgb color parameter in an on/off sequence.
+   * Senders should call stop() or off() to cancel the blink loop.
    * 
    * @param [red=0] The red color value [0-255].
    * @param [green=0] The green color value [0-255].
    * @param [blue=0] The blue color value [0-255].
-   * @param [duration=1000] Blink for duration milliseconds, 0 = blink infinitely
    * @returns Promise<void> to await for completion
    */
-   async blink(red=0, green=0, blue=0, rate=BlinkRate.MED, duration=0): Promise<void> {
+  async blink(red=0, green=0, blue=0, rate=BlinkRate.MED): Promise<void> {
     let cnt = 0;
 
     // setup COLOR ON pattern
-    await this.writePatternLine(rate, red, green, blue, cnt++);
-
+    await this.writePatternLine(rate, red, green, blue, cnt++)
+        
     // setup COLOR OFF pattern
-    await this.writePatternLine(rate, 0, 0, 0, cnt++);
+    await this.writePatternLine(rate, 0, 0, 0, cnt++)
     
     // start blink loop
-    await this.playLoop(0, cnt-1, 0); // play continuously
-
-    await Blink1.delay(duration);
+    await this.playLoop(0, cnt-1, 0) // play continuously
   }
 
   /**

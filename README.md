@@ -45,13 +45,16 @@ async function example() {
   await Blink1.delay(2000);
 
   console.log('Blink green at VERY_FAST rate (100 ms) for 5 seconds');
-  await blink1.blink(0, 255, 0, BlinkRate.VERY_FAST, 5000);
+  await blink1.blink(0, 255, 0, BlinkRate.VERY_FAST);
+  await Blink1.delay(5000);
   
   console.log('Blink blue at SLOW rate (1000 ms) for 5 seconds');
-  await blink1.blink(0, 0, 255, BlinkRate.SLOW, 5000);
+  await blink1.blink(0, 0, 255, BlinkRate.SLOW);
+  await Blink1.delay(5000);
 
   console.log('Show solid yellow for 5 seconds');
-  await blink1.blink(255, 255, 0, 10000, 5000);
+  await blink1.blink(255, 255, 0);
+  await Blink1.delay(5000);
 
   // turn off the blink(1) output
   await blink1.off();

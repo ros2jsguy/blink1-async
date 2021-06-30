@@ -1,5 +1,6 @@
 .vscode/
 .project
 .git*
-examples/
 blink1-async.ts
+examples/
+docs/
